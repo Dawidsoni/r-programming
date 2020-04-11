@@ -31,9 +31,5 @@ print(mean(ordered_dancers[ordered_dancers["height"] >= 170, "age"]))
 print(mean(ordered_dancers[ordered_dancers["height"] < 170, "age"]))
 
 # Task 7
-rm(named_dancers)
-rm(merged_dancers)
-rm(named_dancers)
-rm(paired_dancers)
-rm(male_dancers)
-rm(female_dancers)
+rm(named_dancers, merged_dancers, paired_dancers)
+rm(male_dancers, female_dancers, ordered_dancers)
