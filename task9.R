@@ -1,64 +1,84 @@
-a <- sample(seq(0.25, 5, 0.25), size = 10, replace = FALSE)
+acotan <- Vectorize(function(x) 1 / atan(x))
 
-args1 <- seq(-3, 3, 0.01)
-values1 <- a[1] * args1 - args1 ^ 3
+# Task 1
 
-args2 <- seq(-3, 3, 0.01)
-values2 <- (a[2] * args2 ^ 2 - args2 ^ 4)^(1/3)
+par(mfrow=c(1, 1))
+curve(asin, from = -1, to = 1, ylim = c(-pi, pi), col = "orange", lwd = 3, axes = FALSE)
+curve(acos, from = -1, to = 1, col = "blue", add = TRUE, lwd = 3, lty = 4)
+curve(atan, from = -3, to = 3, col = "purple", add = TRUE, lty = 6, lwd = 4)
+curve(acotan, from = -3, to = 3, col = "green", add = TRUE, lty = 2, lwd = 4)
+axis(1, at = c(-1, -0.5, 0, 0.5, 1), labels = expression(-1, -1 / 2, 0, 1 / 2, 1))
+axis(2, at = c(-pi, -pi / 2, 0, pi / 2, pi), labels = expression(-pi, -pi / 2, 0, pi / 2, pi))
+title(main = "Inverses of trygonometric functions")
+legend("bottomright", legend=c("arcsin(x)", "arccos(x)", "arctan(x)", "arcctg(x)"),
+       col=c("orange", "blue", "purple", "green"), lty=c(1, 4, 6, 2), lwd=c(3, 3, 3, 3), cex=2.0,
+       adj = c(0.1, 0.5), bg = "lightblue")
+text(0.92 , -1.9, labels = "Legend", cex = 1.8)
 
-args3 <- seq(-3 + a[3], 3 + a[3], 0.01)
-values3 <- exp(-abs(args3 - a[3]))
 
-args4 <- seq(-3 * pi, 3 * pi, 0.01)
-values4 <- sin(args4) * sin(a[4] * args4)
+# Task 2
 
-args5 <- seq(-3, 3, 0.01)
-values5 <- exp(-a[5] * abs(args5)) * sin(args5)
+sample_rnorm <- function() {
+  return(cumsum(rnorm(100)))
+}
 
-args6 <- seq(-a[6], a[6], 0.01)
-values6 <- acos((a[6] ^ 2 - args6 ^ 2) / (a[6] ^ 2 + args6 ^ 2))
 
-args7 <- seq(-3 * pi, 3 * pi, 0.01)
-values7a <- args7 * cos(a[7] * args7)
-values7b <- args7 * sin(a[7] * args7)
+trajectories <- matrix(
+  c(sample_rnorm(), sample_rnorm(), sample_rnorm(), sample_rnorm(), sample_rnorm()),
+  ncol = 5
+)
+matplot(trajectories, type = "l", axes = FALSE)
+title(main = "Brownian motion")
+axis(1, at = seq(0, 100, 10))
+axis(2, at = seq(floor(min(trajectories)), floor(max(trajectories) + 5), 5))
+rounded_min_value <- round(min(trajectories), digits = 2)
+text(10 , min(trajectories), labels = paste("Minimum is achieved at", rounded_min_value), cex = 1.2)
+mtext("5 simulated trajectories")
 
-args8 <- seq(0, 2 * pi, 0.01)
-values8a <- a[8] * cos(2 * args8)
-values8b <- a[8] * cos(3 * args8)
+# Task 3
 
-args9 <- seq(0, 6 * pi, 0.01)
-values9a <- sin(a[9] * args9) - args9
-values9b <- cos(a[9] * args9) - 1
+plot(c(0, 100), c(0, 100), type = "n")
+rect(40, 40, 60, 60, col="purple")
+abline(a = 0, b = 1, lty = 1, lwd = 3, col = "red")
+abline(a = 100, b = -1, lty = 1, lwd = 3, col = "red")
+lines(c(50, 50), c(-20, 120), lty = 2, lwd = 5, col="blue")
+lines(c(-20, 120), c(50, 50), lty = 2, lwd = 5, col="blue")
+symbols(30, 30, circles = 7, bg = "yellow", add = TRUE, inches = FALSE)
+symbols(70, 70, squares = 10, bg = "green", add = TRUE, inches = FALSE)
+symbols(70, 30, stars = matrix(7, ncol = 6), bg = "orange", add = TRUE, inches = FALSE)
+symbols(30, 70, thermometers = matrix(c(5, 12, 0.1), ncol = 3), bg = "brown", add = TRUE, inches = FALSE)
+polygon(c(25, 45, 45, 35, 25), c(5, 5, 20, 12.5, 20), col = "magenta")
 
-args10 <- seq(0, 2 * pi, 0.01)
-values10a <- a[10] * cos(args10) ^ 3
-values10b <- a[10] * sin(args10) ^ 3
+# Task 4
 
-par(mfrow=c(1, 3))
-plot(args1, values1, asp = 1.0)
-plot(args2, values2, type = "l")
-plot(args3, values3, col = "green")
+elliptic_x <- seq(-2, 2, 0.03)
+elliptic_y <- seq(-2, 2, 0.03)
+elliptic_f <- function(x, y) (x^2 + y^2)
+elliptic_z <- outer(elliptic_x, elliptic_y, elliptic_f)
 
-par(mfcol=c(2, 1))
-plot(args4, values4, pch = 8)
-plot(args5, values5, cex = 2, col = "blue")
+hyperbolic_x <- seq(-2, 2, 0.03)
+hyperbolic_y <- seq(-2, 2, 0.03)
+hyperbolic_f <- function(x, y) (x^2 - y^2)
+hyperbolic_z <- outer(hyperbolic_x, hyperbolic_y, hyperbolic_f)
 
-par(mfrow=c(1,1))
-par(mar=c(1.5, 1.5, 1.5, 1.5))
-horizontal_screens <- split.screen(c(3, 1))
-vertical_screens1 <- split.screen(c(1, 2), screen = horizontal_screens[2])
-vertical_screens2 <- split.screen(c(1, 2), screen = horizontal_screens[3])
+par(mfrow=c(1, 2))
+persp(elliptic_x, elliptic_y, elliptic_z, theta = 5, phi = 30, expand = 0.8, border = "darkblue",
+      xlab = "X axis", ylab = "Y axis", zlab = "Z axis", ticktype = "detailed", nticks = 5)
+title("Elliptic paraboloid (for a = 1, b = 1)")
+persp(hyperbolic_x, hyperbolic_y, hyperbolic_z, theta = 40, phi = 40, expand = 0.8, border = "darkorange",
+      xlab = "X axis", ylab = "Y axis", zlab = "Z axis", ticktype = "detailed", nticks = 5)
+title("Hyperbolic paraboloid (for a = 1, b = 1)")
 
-screen(horizontal_screens[1], new = FALSE)
-plot(args6, values6, main = "Function 6", sub = "Description", xlab = "x", ylab = "y")
-screen(vertical_screens1[1], new = FALSE)
-plot(values7a, values7b, type = "p")
-screen(vertical_screens1[2], new = FALSE)
-plot(values8a, values8b, type = "l", lty = 3, lwd = 5)
-screen(vertical_screens2[1], new = FALSE)
-plot(values9a, values9b, type = "o", lty = 2, lwd = 2)
-screen(vertical_screens2[2], new = FALSE)
-plot(values10a, values10b, type = "s", col = "purple")
-close.screen(all.screens = T)
+par(mfrow=c(1, 2))
+contour(elliptic_x, elliptic_y, elliptic_z, nlevels = 20, drawlabels = FALSE, col = heat.colors(20), lwd = 3)
+title("Contours of elliptic paraboloid (for a = 1, b = 1)")
+contour(hyperbolic_x, hyperbolic_y, hyperbolic_z, nlevels = 20, drawlabels = FALSE, col = heat.colors(20), lwd = 3)
+title("Contours of hyperbolic paraboloid (for a = 1, b = 1)")
+
+par(mfrow=c(1, 2))
+image(elliptic_x, elliptic_y, elliptic_z, col = heat.colors(15))
+title("Image plot of elliptic paraboloid (for a = 1, b = 1)")
+image(hyperbolic_x, hyperbolic_y, hyperbolic_z, col = heat.colors(15))
+title("Image plot of hyperbolic paraboloid (for a = 1, b = 1)")
 
 rm(list = ls())
